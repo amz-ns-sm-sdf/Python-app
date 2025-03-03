@@ -1,16 +1,20 @@
 from flask import Flask, render_template, request, redirect, session
 import mysql.connector
 import bcrypt
+from dotenv import load_dotenv
+import os
+
+load_dotenv()
 
 app = Flask(__name__)
-app.secret_key = "secret_key"  # Needed for session management
+app.secret_key = os.getenv("SECRET_KEY")  # Flask secret key
 
 # MySQL Configuration
 db = mysql.connector.connect(
-    host="localhost",
-    user="root",        # Change if needed
-    password="admin",# Change to your MySQL password
-    database="registration_db"
+    host=os.getenv("DB_HOST"),
+    user=os.getenv("DB_USER"),
+    password=os.getenv("DB_PASSWORD"),
+    database=os.getenv("DB_NAME")
 )
 
 # ---------------- User Registration ----------------
@@ -61,9 +65,19 @@ def login():
 # ---------------- User Dashboard ----------------
 @app.route("/dashboard")
 def dashboard():
-    if "user_id" in session:
-        return f"Welcome, {session['user_name']}! <br> <a href='/logout'>Logout</a>"
-    return redirect("/login")
+    if "user_id" not in session:
+        return redirect("/login")
+
+    cursor = db.cursor(dictionary=True)
+    cursor.execute("SELECT id, name, email, phone, address FROM users WHERE id = %s", (session["user_id"],))
+    user = cursor.fetchone()
+    cursor.close()
+
+    if not user:
+        return "User not found!", 404
+
+    return render_template("dashboard.html", user=user)
+
 
 # ---------------- Admin Page (List of Users) ----------------
 @app.route("/admin")
