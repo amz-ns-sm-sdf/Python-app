@@ -3,7 +3,57 @@
 <head>
     <meta charset="UTF-8">
     <title>Admin Panel</title>
-    <link rel="stylesheet" href="{{ url_for('static', filename='style.css') }}">
+    <style>
+        /* General Table Styling */
+table {
+    width: 100%;
+    border-collapse: collapse;
+    margin-top: 20px;
+    background: white;
+    border-radius: 10px;
+    overflow: hidden;
+    box-shadow: 0px 0px 10px rgba(0, 0, 0, 0.1);
+}
+
+/* Table Borders */
+table, th, td {
+    border: 1px solid #ddd;
+}
+
+/* Table Header */
+th {
+    background: #007bff;
+    color: white;
+    padding: 12px;
+    text-align: center;
+}
+
+/* Table Rows */
+td {
+    padding: 10px;
+    text-align: center;
+}
+
+/* Alternate Row Colors */
+tr:nth-child(even) {
+    background: #f9f9f9;
+}
+
+/* Hover Effect */
+tr:hover {
+    background: #f1f1f1;
+}
+
+/* Responsive Table */
+@media (max-width: 600px) {
+    table {
+        display: block;
+        overflow-x: auto;
+        white-space: nowrap;
+    }
+}
+
+    </style>
 </head>
 <body>
     <div class="container">
